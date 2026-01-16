@@ -1,0 +1,20 @@
+{
+  "Group": "Feli490",
+  "Name": "PrivateChats",
+  "Version": "1.0.0",
+  "Description": "",
+  "Authors": [
+    {
+      "Name": "Maik 'Feli490' Ehemann",
+      "Email": "hytale@feli490.de",
+      "Url": "https://feli490.de"
+    }
+  ],
+  "Website": "https://feli490.de",
+  "Main": "de.feli490.hytale.privatechats.PrivateChatsPlugin",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": true
+}
