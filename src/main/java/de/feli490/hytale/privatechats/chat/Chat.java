@@ -40,6 +40,10 @@ public class Chat {
                                                                  .equals(playerId));
     }
 
+    public String getChatName() {
+        return chatType.name() + ": " + playerChatRoles.size();
+    }
+
     public ChatRole getRole(UUID playerId) {
         return playerChatRoles.stream()
                               .filter(playerChatRole -> playerChatRole.getPlayerId()
@@ -80,6 +84,10 @@ public class Chat {
 
     public List<ChatMessage> getMessages() {
         return unmodifiableMessageList;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public static Chat createDirect(UUID player1, UUID player2) {

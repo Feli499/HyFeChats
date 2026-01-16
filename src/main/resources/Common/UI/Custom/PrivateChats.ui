@@ -49,6 +49,31 @@ $C.@Container {
                 }
             }
         }
+
+        Group {
+            LayoutMode: Left;
+
+            Group {
+                OutlineColor: #e8ec1a(0.5);
+                OutlineSize: 1.5;
+                Anchor: (Width: 200);
+                LayoutMode: Top;
+
+                Label {
+                    Text: "Deine Chats";
+                }
+
+                Group {
+                    LayoutMode: TopScrolling;
+                    ScrollbarStyle: $C.@DefaultScrollbarStyle;
+                    Padding: (Right: 10);
+
+                    Group #ChatPreviews {
+                        LayoutMode: Top;
+                    }
+                }
+            }
+        }
     }
 }
 
