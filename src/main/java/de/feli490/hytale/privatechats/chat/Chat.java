@@ -53,6 +53,10 @@ public class Chat {
         return created;
     }
 
+    public ChatType getChatType() {
+        return chatType;
+    }
+
     public long getLastUpdate() {
 
         ChatMessage lastMessage = getLastMessage();
