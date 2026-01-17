@@ -1,6 +1,6 @@
 $C = "Common.ui";
 
-Group {
+Button {
     LayoutMode: Left;
     OutlineColor: #f87c5a(0.7);
     OutlineSize: 1.5;

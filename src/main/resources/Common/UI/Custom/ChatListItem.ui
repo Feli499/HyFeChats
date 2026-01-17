@@ -2,7 +2,6 @@ $C = "Common.ui";
 
 Group {
     Anchor: (Height: 50);
-    Padding: (Bottom: 5);
 
     Button #OpenChatButton {
         LayoutMode: Top;

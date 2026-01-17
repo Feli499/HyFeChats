@@ -16,6 +16,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import de.feli490.hytale.privatechats.PrivateChatManager;
 import de.feli490.hytale.privatechats.chat.Chat;
 import de.feli490.hytale.privatechats.chat.ChatMessage;
+import de.feli490.hytale.privatechats.utils.MessageUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -59,7 +60,16 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
 
         uiCommandBuilder.set("#ChatView[0] #ChatName.Text", currentChat.getChatName());
 
-        List<ChatMessage> messages = chat.getMessages();
+        sendUpdate(uiCommandBuilder, false);
+
+        rewriteMessages();
+    }
+
+    public void rewriteMessages() {
+
+        UICommandBuilder uiCommandBuilder = new UICommandBuilder();
+
+        List<ChatMessage> messages = currentChat.getMessages();
         String selector = "#ChatView[0] #MessageItem";
 
         for (int i = 0; i < messages.size(); i++) {
@@ -68,6 +78,7 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
 
             uiCommandBuilder.set(selector + "[" + i + "] #DisplayName.Text", chatMessage.id() + ": ");
             uiCommandBuilder.set(selector + "[" + i + "] #Message.Text", chatMessage.message());
+            uiCommandBuilder.set(selector + "[" + i + "].TooltipTextSpans", MessageUtils.formatTimestamp(chatMessage.timestamp()));
         }
 
         sendUpdate(uiCommandBuilder, false);
