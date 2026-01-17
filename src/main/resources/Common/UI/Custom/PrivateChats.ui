@@ -69,7 +69,6 @@ $C.@Container {
 
                     Group #ChatPreviewItem {
                         LayoutMode: Top;
-                        Padding: (Right: 5);
                     }
                 }
             }

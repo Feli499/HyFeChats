@@ -29,10 +29,12 @@ public class PrivateChatsUI extends CustomUIPage {
             @NonNullDecl UIEventBuilder uiEventBuilder, @NonNullDecl Store<EntityStore> store) {
 
         uiCommandBuilder.append("PrivateChats.ui");
+        updateChatMessages(uiCommandBuilder);
+    }
 
+    private void updateChatMessages(UICommandBuilder uiCommandBuilder) {
         uiCommandBuilder.clear("#ChatPreviewItem");
 
-        uiCommandBuilder.appendInline("#ChatPreviewItem", "Group { LayoutMode: Top; }");
         List<Chat> sortedChats = chatManager.getSortedChats(playerRef.getUuid());
         for (int i = 0; i < sortedChats.size(); i++) {
             Chat chat = sortedChats.get(i);
@@ -44,10 +46,8 @@ public class PrivateChatsUI extends CustomUIPage {
                 previewText = lastMessage.message();
 
             uiCommandBuilder.append("#ChatPreviewItem", "ChatListItem.ui");
-            //            uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #ChatName.Text", chat.getChatName());
-            //            uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #MessagePreview.Text", previewText);
+            uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #ChatName.Text", chat.getChatName());
+            uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #MessagePreview.Text", previewText);
         }
-
-        sendUpdate(uiCommandBuilder, false);
     }
 }
