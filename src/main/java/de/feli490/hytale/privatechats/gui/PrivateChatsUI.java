@@ -38,6 +38,7 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
             @NonNullDecl UIEventBuilder uiEventBuilder, @NonNullDecl Store<EntityStore> store) {
 
         uiCommandBuilder.append("PrivateChats.ui");
+
         updateChatList(uiCommandBuilder, uiEventBuilder);
     }
 
@@ -53,7 +54,11 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
         currentChat = chat;
 
         UICommandBuilder uiCommandBuilder = new UICommandBuilder();
-        uiCommandBuilder.set("#ChatLabel.Text", chat.getChatName() + " (" + chat.getId() + ")");
+        uiCommandBuilder.clear("#ChatView");
+        uiCommandBuilder.append("#ChatView", "ChatView.ui");
+
+        uiCommandBuilder.set("#ChatView[0] #ChatName.Text", currentChat.getChatName());
+
         sendUpdate(uiCommandBuilder, false);
     }
 
