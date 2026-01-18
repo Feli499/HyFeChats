@@ -9,7 +9,7 @@ import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import de.feli490.hytale.privatechats.PrivateChatManager;
 import de.feli490.hytale.privatechats.gui.PrivateChatsUI;
-import de.feli490.hytale.privatechats.utils.CommandUtils;
+import de.feli490.utils.hytale.utils.CommandUtils;
 import java.util.concurrent.CompletableFuture;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 

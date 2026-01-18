@@ -19,6 +19,10 @@
             <id>Maven Central</id>
             <url>https://repo1.maven.org/maven2</url>
         </repository>
+        <repository>
+            <id>Ehemanns-Repo</id>
+            <url>https://repo.ehemanns.de/repository/maven-public/</url>
+        </repository>
     </repositories>
 
 
@@ -27,6 +31,12 @@
             <groupId>com.hypixel.hytale</groupId>
             <artifactId>HytaleServer-parent</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.feli490.utils.hytale</groupId>
+            <artifactId>FeliUtils-Hytale</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -6,7 +6,7 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import de.feli490.hytale.privatechats.chat.Chat;
 import de.feli490.hytale.privatechats.chat.ChatRole;
 import de.feli490.hytale.privatechats.chat.PlayerChatRole;
-import de.feli490.hytale.privatechats.utils.PlayerUtils;
+import de.feli490.utils.hytale.utils.PlayerUtils;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;

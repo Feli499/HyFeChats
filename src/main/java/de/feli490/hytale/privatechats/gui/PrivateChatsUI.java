@@ -16,7 +16,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import de.feli490.hytale.privatechats.PrivateChatManager;
 import de.feli490.hytale.privatechats.chat.Chat;
 import de.feli490.hytale.privatechats.chat.ChatMessage;
-import de.feli490.hytale.privatechats.utils.MessageUtils;
+import de.feli490.utils.hytale.utils.MessageUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
