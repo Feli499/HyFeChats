@@ -3,7 +3,10 @@ package de.feli490.hytale.privatechats;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import de.feli490.hytale.privatechats.chat.ChatFactory;
 import de.feli490.hytale.privatechats.commands.ChatCommand;
+import de.feli490.utils.hytale.PlayerDataProviderInstance;
+import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +16,7 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 public class PrivateChatsPlugin extends JavaPlugin {
 
     private PrivateChatManager privateChatManager;
+    private PlayerDataProvider playerDataProvider;
 
     public PrivateChatsPlugin(@NonNullDecl JavaPluginInit init) {
         super(init);
@@ -30,15 +34,18 @@ public class PrivateChatsPlugin extends JavaPlugin {
             return;
         }
 
-        privateChatManager = new PrivateChatManager();
+        playerDataProvider = PlayerDataProviderInstance.get();
+        ChatFactory chatFactory = new ChatFactory(playerDataProvider);
+        privateChatManager = new PrivateChatManager(chatFactory);
 
         getLogger().at(Level.INFO).log("Successfuly loaded the Plugin!");
     }
 
     @Override
     protected void start() {
-        
+
         setupCommands();
+
         getLogger().at(Level.INFO).log("Successfuly started the Plugin!");
 
         new DebugChatFactory(getEventRegistry(), privateChatManager);
@@ -59,6 +66,6 @@ public class PrivateChatsPlugin extends JavaPlugin {
 
     private void setupCommands() {
         CommandManager commandManager = CommandManager.get();
-        commandManager.registerSystemCommand(new ChatCommand(privateChatManager));
+        commandManager.registerSystemCommand(new ChatCommand(privateChatManager, playerDataProvider));
     }
 }

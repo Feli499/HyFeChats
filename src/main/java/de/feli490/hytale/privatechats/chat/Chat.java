@@ -2,10 +2,12 @@ package de.feli490.hytale.privatechats.chat;
 
 import de.feli490.hytale.privatechats.chat.listeners.MemberChangedListener;
 import de.feli490.hytale.privatechats.chat.listeners.ReceivedNewMessageListener;
+import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ public class Chat {
     private final UUID id;
     private final ChatType chatType;
     private final long created;
+    private final PlayerDataProvider playerDataProvider;
 
     private final Set<PlayerChatRole> playerChatRoles;
     private final Set<PlayerChatRole> unmodifiablePlayerChatRoles;
@@ -24,10 +27,11 @@ public class Chat {
     private final Set<ReceivedNewMessageListener> messageListeners = new HashSet<>();
     private final Set<MemberChangedListener> memberChangedListeners = new HashSet<>();
 
-    private Chat(UUID id, ChatType chatType, long created) {
+    public Chat(UUID id, ChatType chatType, long created, PlayerDataProvider playerDataProvider) {
         this.id = id;
         this.chatType = chatType;
         this.created = created;
+        this.playerDataProvider = playerDataProvider;
 
         playerChatRoles = new HashSet<>();
         messages = new ArrayList<>();
@@ -87,7 +91,21 @@ public class Chat {
                               .orElse(null);
     }
 
-    public String getChatName() {
+    public String getChatName(UUID chatNameFor) {
+
+        if (chatType == ChatType.DIRECT) {
+            Optional<PlayerChatRole> first = playerChatRoles.stream()
+                                                            .filter(playerChatRole -> !playerChatRole.getPlayerId()
+                                                                                                     .equals(chatNameFor))
+                                                            .findFirst();
+            PlayerChatRole playerChatRole = first.get();
+            UUID playerId = playerChatRole.getPlayerId();
+            String lastPlayerName = playerDataProvider.getLastPlayerName(playerId);
+            if (lastPlayerName == null)
+                return "Unknown (" + playerId + ")";
+            return lastPlayerName;
+        }
+
         return chatType.name() + ": " + playerChatRoles.size();
     }
 
@@ -139,22 +157,5 @@ public class Chat {
 
     public UUID getId() {
         return id;
-    }
-
-    public static Chat createDirect(UUID player1, UUID player2) {
-        Chat chat = createChat(ChatType.DIRECT);
-        chat.addChatter(player1, ChatRole.OWNER);
-        chat.addChatter(player2, ChatRole.OWNER);
-        return chat;
-    }
-
-    public static Chat createGroup(UUID player1) {
-        Chat chat = createChat(ChatType.GROUP);
-        chat.addChatter(player1, ChatRole.OWNER);
-        return chat;
-    }
-
-    private static Chat createChat(ChatType chatType) {
-        return new Chat(UUID.randomUUID(), chatType, System.currentTimeMillis());
     }
 }

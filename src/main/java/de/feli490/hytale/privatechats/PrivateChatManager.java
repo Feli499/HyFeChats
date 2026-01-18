@@ -1,6 +1,7 @@
 package de.feli490.hytale.privatechats;
 
 import de.feli490.hytale.privatechats.chat.Chat;
+import de.feli490.hytale.privatechats.chat.ChatFactory;
 import de.feli490.hytale.privatechats.chat.ChatType;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -12,13 +13,15 @@ import java.util.UUID;
 public class PrivateChatManager {
 
     private final Set<Chat> chats;
+    private final ChatFactory chatFactory;
 
-    public PrivateChatManager() {
+    public PrivateChatManager(ChatFactory chatFactory) {
+        this.chatFactory = chatFactory;
         chats = new HashSet<>();
     }
 
     public Chat createGroupChat(UUID owner) {
-        Chat group = Chat.createGroup(owner);
+        Chat group = chatFactory.createGroup(owner);
         chats.add(group);
         return group;
     }
@@ -32,7 +35,7 @@ public class PrivateChatManager {
         if (first.isPresent())
             return first.get();
 
-        Chat direct = Chat.createDirect(player1, player2);
+        Chat direct = chatFactory.createDirect(player1, player2);
         chats.add(direct);
         return direct;
     }

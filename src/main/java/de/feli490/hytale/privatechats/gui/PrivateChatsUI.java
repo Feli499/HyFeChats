@@ -17,6 +17,7 @@ import de.feli490.hytale.privatechats.PrivateChatManager;
 import de.feli490.hytale.privatechats.chat.Chat;
 import de.feli490.hytale.privatechats.chat.ChatMessage;
 import de.feli490.hytale.privatechats.chat.listeners.ReceivedNewMessageListener;
+import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.MessageUtils;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +27,13 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.PrivateChatData> implements ReceivedNewMessageListener {
 
     private final List<Chat> chats;
+    private final PlayerDataProvider playerDataProvider;
     private Chat currentChat;
 
-    public PrivateChatsUI(@NonNullDecl PlayerRef playerRef, @NonNullDecl CustomPageLifetime lifetime, PrivateChatManager chatManager) {
+    public PrivateChatsUI(@NonNullDecl PlayerRef playerRef, @NonNullDecl CustomPageLifetime lifetime, PrivateChatManager chatManager,
+            PlayerDataProvider playerDataProvider) {
         super(playerRef, lifetime, PrivateChatData.CODEC);
+        this.playerDataProvider = playerDataProvider;
 
         chats = chatManager.getSortedChats(playerRef.getUuid());
         currentChat = null;
@@ -70,7 +74,7 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
         uiCommandBuilder.append("#ChatView", "ChatView.ui");
 
         String prefix = "#ChatView[0] ";
-        uiCommandBuilder.set(prefix + "#ChatName.Text", currentChat.getChatName());
+        uiCommandBuilder.set(prefix + "#ChatName.Text", currentChat.getChatName(playerRef.getUuid()));
 
         UIEventBuilder uiEventBuilder = new UIEventBuilder();
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating,
@@ -96,7 +100,12 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
             ChatMessage chatMessage = messages.get(i);
             uiCommandBuilder.append(selector, "ChatMessage.ui");
 
-            uiCommandBuilder.set(selector + "[" + i + "] #DisplayName.Text", chatMessage.senderId() + ": ");
+            UUID playerUUID = chatMessage.senderId();
+            String lastPlayerName = playerDataProvider.getLastPlayerName(playerUUID);
+            if (lastPlayerName == null)
+                lastPlayerName = "Unknown (" + playerUUID + ")";
+
+            uiCommandBuilder.set(selector + "[" + i + "] #DisplayName.Text", lastPlayerName + ": ");
             uiCommandBuilder.set(selector + "[" + i + "] #Message.Text", chatMessage.message());
             uiCommandBuilder.set(selector + "[" + i + "].TooltipTextSpans", MessageUtils.formatTimestamp(chatMessage.timestamp()));
         }
@@ -137,7 +146,7 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
                 previewText = lastMessage.message();
 
             uiCommandBuilder.append("#ChatPreviewItem", "ChatListItem.ui");
-            uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #ChatName.Text", chat.getChatName());
+            uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #ChatName.Text", chat.getChatName(playerRef.getUuid()));
             uiCommandBuilder.set("#ChatPreviewItem[" + i + "] #MessagePreview.Text", previewText);
             uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating,
                                            "#ChatPreviewItem[" + i + "] #OpenChatButton",
