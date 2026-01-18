@@ -13,7 +13,9 @@
   "Website": "https://feli490.de",
   "Main": "de.feli490.hytale.privatechats.PrivateChatsPlugin",
   "ServerVersion": "*",
-  "Dependencies": {},
+  "Dependencies": {
+    "Feli490.de:FeliUtils": "*"
+  },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "IncludesAssetPack": true
