@@ -31,11 +31,14 @@ public class JsonChatDataLoader implements ChatDataLoader {
     public JsonChatDataLoader(HytaleLogger logger, Path path) throws IOException {
 
         this.logger = logger.getSubLogger("JsonChatWriter");
+        directory = path;
+        
+        if (!Files.exists(path))
+            Files.createDirectories(path);
 
         if (!Files.isDirectory(path))
             throw new IllegalArgumentException("Path must be a directory");
 
-        directory = Files.createDirectories(path);
     }
 
     @Override
