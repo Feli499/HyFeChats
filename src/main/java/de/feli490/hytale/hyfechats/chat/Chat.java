@@ -2,6 +2,7 @@ package de.feli490.hytale.hyfechats.chat;
 
 import de.feli490.hytale.hyfechats.chat.listeners.MemberChangedListener;
 import de.feli490.hytale.hyfechats.chat.listeners.ReceivedNewMessageListener;
+import de.feli490.hytale.hyfechats.data.ChatData;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -168,5 +169,13 @@ public class Chat {
 
     public UUID getId() {
         return id;
+    }
+
+    public static Chat fromChatData(ChatData chatData, PlayerDataProvider playerDataProvider) {
+
+        Chat chat = new Chat(chatData.getId(), chatData.getChatType(), chatData.getCreated(), playerDataProvider);
+        chat.messages.addAll(chatData.getMessages());
+        chat.playerChatRoles.addAll(chatData.getPlayerChatRoles());
+        return chat;
     }
 }

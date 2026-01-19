@@ -5,11 +5,20 @@ import java.util.UUID;
 public class PlayerChatRole {
 
     private final UUID playerId;
-    private ChatRole role;
+    private final long memberSince;
 
-    public PlayerChatRole(UUID playerId, ChatRole role) {
+    private ChatRole role;
+    private long updated;
+
+    public PlayerChatRole(UUID playerId, ChatRole role, long memberSince, long updated) {
         this.playerId = playerId;
         this.role = role;
+        this.memberSince = memberSince;
+        this.updated = updated;
+    }
+
+    public PlayerChatRole(UUID playerId, ChatRole role) {
+        this(playerId, role, System.currentTimeMillis(), System.currentTimeMillis());
     }
 
     public UUID getPlayerId() {
@@ -22,5 +31,14 @@ public class PlayerChatRole {
 
     public void setRole(ChatRole role) {
         this.role = role;
+        this.updated = System.currentTimeMillis();
+    }
+
+    public long getMemberSince() {
+        return memberSince;
+    }
+
+    public long getUpdated() {
+        return updated;
     }
 }
