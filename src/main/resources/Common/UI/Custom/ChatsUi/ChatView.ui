@@ -15,6 +15,7 @@ Group {
         TextField #NewMessage {
             Style: $C.@DefaultInputFieldStyle;
             Background: $C.@InputBoxBackground;
+            Padding: (Left:5);
             FlexWeight: 1;
             PlaceholderText: "Write a message...";
         }

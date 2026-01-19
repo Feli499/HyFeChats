@@ -20,6 +20,7 @@ import de.feli490.hytale.privatechats.chat.listeners.ReceivedNewMessageListener;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.MessageUtils;
 import de.feli490.utils.hytale.utils.PlayerUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -103,7 +104,9 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
         String selector = "#ChatView[0] #MessageItem";
         uiCommandBuilder.clear(selector);
 
-        List<ChatMessage> messages = currentChat.getMessages();
+        List<ChatMessage> messages = new ArrayList<>(currentChat.getMessages());
+
+        messages.sort((message1, message2) -> Long.compare(message2.timestamp(), message1.timestamp()));
 
         for (int i = 0; i < messages.size(); i++) {
             ChatMessage chatMessage = messages.get(i);
