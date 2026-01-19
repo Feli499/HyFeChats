@@ -16,6 +16,8 @@ import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import de.feli490.hytale.privatechats.PrivateChatManager;
+import de.feli490.hytale.privatechats.chat.Chat;
+import de.feli490.hytale.privatechats.chat.ChatRole;
 import de.feli490.utils.core.common.tuple.Pair;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.PlayerUtils;
@@ -33,7 +35,7 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
     private final PrivateChatManager chatManager;
     private final PlayerDataProvider playerDataProvider;
-    private final Supplier<CustomUIPage> returnPageSupplier;
+    private Supplier<CustomUIPage> returnPageSupplier;
 
     private List<UUID> currentDisplayedUUIDs;
 
@@ -59,12 +61,9 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
     @Override
     public void onDismiss(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store) {
-        if (returnPageSupplier != null) {
-            Player player = PlayerUtils.getPlayer(playerRef);
-            CompletableFuture.delayedExecutor(1, TimeUnit.MILLISECONDS, player.getWorld())
-                             .execute(() -> player.getPageManager()
-                                                  .openCustomPage(ref, store, returnPageSupplier.get()));
-        }
+        Player player = PlayerUtils.getPlayer(playerRef);
+        CompletableFuture.delayedExecutor(1, TimeUnit.MILLISECONDS, player.getWorld())
+                         .execute(this::goToPreviousPage);
     }
 
     @Override
@@ -73,6 +72,16 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
         uiCommandBuilder.append("CreateChat/CreateChat.ui");
         updatePlayerList(uiCommandBuilder, uiEventBuilder);
+
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged,
+                                       "#SearchPlayerName",
+                                       EventData.of(CreateChatData.KEY_SEARCH_PLAYER_TEXT, "#SearchPlayerName.Value"),
+                                       false);
+
+        uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating,
+                                       "#CreateChatButton",
+                                       EventData.of(CreateChatData.KEY_CREATE_CHAT_BUTTON_ACTION, "true"),
+                                       false);
     }
 
     private void updatePlayerList(UICommandBuilder uiCommandBuilder, UIEventBuilder uiEventBuilder) {
@@ -101,8 +110,8 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         int row = 0;
         for (Pair<UUID, String> pair : filteredUUIDs) {
             UUID currentUUID = pair.getFirst();
-            //            if (currentUUID.equals(playerRef.getUuid()))
-            //                continue;
+            if (currentUUID.equals(playerRef.getUuid()))
+                continue;
 
             if (column == 0) {
                 uiCommandBuilder.appendInline("#PlayerItems", "Group { LayoutMode: Left; Anchor: (Bottom: 0); }");
@@ -125,7 +134,10 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         }
     }
 
-    public void updatePlayerList() {
+    public void updatePlayerList(String playerSearchQuery) {
+
+        this.playerSearchQuery = playerSearchQuery;
+
         UICommandBuilder uiCommandBuilder = new UICommandBuilder();
         UIEventBuilder uiEventBuilder = new UIEventBuilder();
 
@@ -140,10 +152,39 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         super.handleDataEvent(ref, store, data);
 
         if (data.getPlayerSearchQuery() != null) {
-            playerSearchQuery = data.getPlayerSearchQuery();
+            updatePlayerList(data.getPlayerSearchQuery());
         } else if (data.getPlayerEditUUID() != null) {
             toggleSelectedPlayer(data.getPlayerEditUUID());
+        } else if (data.getCreateChatButtonPressed() != null) {
+            createChat();
         }
+    }
+
+    private void goToPreviousPage() {
+        if (returnPageSupplier == null)
+            return;
+        returnPageSupplier = null;
+
+        CustomUIPage customUIPage = returnPageSupplier.get();
+        Ref<EntityStore> reference = playerRef.getReference();
+        PlayerUtils.getPlayer(playerRef)
+                   .getPageManager()
+                   .openCustomPage(reference, reference.getStore(), customUIPage);
+    }
+
+    private void createChat() {
+        if (selectedPlayerUUIDs.size() == 2) {
+            chatManager.createDirectChat(selectedPlayerUUIDs.get(0), selectedPlayerUUIDs.get(1));
+        } else if (selectedPlayerUUIDs.size() > 2) {
+
+            UUID owner = playerRef.getUuid();
+            selectedPlayerUUIDs.remove(owner);
+            Chat groupChat = chatManager.createGroupChat(owner);
+
+            selectedPlayerUUIDs.forEach(uuid -> groupChat.addChatter(uuid, ChatRole.MEMBER));
+        }
+
+        goToPreviousPage();
     }
 
     public void toggleSelectedPlayer(UUID playerUUID) {
@@ -166,13 +207,13 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
     public static class CreateChatData {
 
-        static final String KEY_DISPLAY_CHAT_BUTTON_ACTION = "CreateChatButton";
+        static final String KEY_CREATE_CHAT_BUTTON_ACTION = "CreateChatButton";
         static final String KEY_PLAYER_EDIT_UUID = "PlayerEditUUID";
         static final String KEY_SEARCH_PLAYER_TEXT = "@SearchPlayerName";
 
         public static final BuilderCodec<CreateChatData> CODEC = BuilderCodec.builder(CreateChatData.class, CreateChatData::new)
-                                                                             .addField(new KeyedCodec<>(KEY_DISPLAY_CHAT_BUTTON_ACTION,
-                                                                                                        Codec.BOOLEAN),
+                                                                             .addField(new KeyedCodec<>(KEY_CREATE_CHAT_BUTTON_ACTION,
+                                                                                                        Codec.STRING),
                                                                                        CreateChatData::setCreateChatButtonPressed,
                                                                                        CreateChatData::getCreateChatButtonPressed)
                                                                              .addField(new KeyedCodec<>(KEY_PLAYER_EDIT_UUID,
@@ -184,20 +225,19 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
                                                                                        CreateChatData::setPlayerSearchQuery,
                                                                                        CreateChatData::getPlayerSearchQuery)
                                                                              .build();
-        private boolean createChatButtonPressed;
+        private String createChatButtonPressed;
         private String playerSearchQuery;
 
         private UUID playerEditUUID;
-        private String playerUUIDAction;
 
         public CreateChatData() {}
 
-        public boolean getCreateChatButtonPressed() {
+        public String getCreateChatButtonPressed() {
             return createChatButtonPressed;
         }
 
-        public void setCreateChatButtonPressed(boolean displayChat) {
-            this.createChatButtonPressed = displayChat;
+        public void setCreateChatButtonPressed(String createChatButtonPressed) {
+            this.createChatButtonPressed = createChatButtonPressed;
         }
 
         public String getPlayerSearchQuery() {
