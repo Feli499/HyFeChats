@@ -51,7 +51,6 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         currentDisplayedUUIDs = Collections.emptyList();
 
         selectedPlayerUUIDs = new ArrayList<>();
-        selectedPlayerUUIDs.add(playerRef.getUuid());
     }
 
     public CreateChatUI(@NonNullDecl PlayerRef playerRef, @NonNullDecl CustomPageLifetime lifetime, PrivateChatManager chatManager,
@@ -100,6 +99,8 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
             filteredUUIDs.removeIf(pair -> !pair.getSecond()
                                                 .toLowerCase()
                                                 .contains(playerSearchQuery));
+        filteredUUIDs.removeIf(pair -> pair.getFirst()
+                                           .equals(playerRef.getUuid()));
 
         filteredUUIDs.sort(Comparator.comparing(Pair::getSecond));
         currentDisplayedUUIDs = filteredUUIDs.stream()
@@ -110,8 +111,6 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         int row = 0;
         for (Pair<UUID, String> pair : filteredUUIDs) {
             UUID currentUUID = pair.getFirst();
-            if (currentUUID.equals(playerRef.getUuid()))
-                continue;
 
             if (column == 0) {
                 uiCommandBuilder.appendInline("#PlayerItems", "Group { LayoutMode: Left; Anchor: (Bottom: 0); }");
@@ -174,14 +173,10 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
     }
 
     private void createChat() {
-        if (selectedPlayerUUIDs.size() == 2) {
-            chatManager.createDirectChat(selectedPlayerUUIDs.get(0), selectedPlayerUUIDs.get(1));
+        if (selectedPlayerUUIDs.size() == 1) {
+            chatManager.createDirectChat(playerRef.getUuid(), selectedPlayerUUIDs.get(0));
         } else if (selectedPlayerUUIDs.size() > 2) {
-
-            UUID owner = playerRef.getUuid();
-            selectedPlayerUUIDs.remove(owner);
-            Chat groupChat = chatManager.createGroupChat(owner);
-
+            Chat groupChat = chatManager.createGroupChat(playerRef.getUuid());
             selectedPlayerUUIDs.forEach(uuid -> groupChat.addChatter(uuid, ChatRole.MEMBER));
         }
 
