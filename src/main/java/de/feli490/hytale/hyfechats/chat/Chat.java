@@ -108,7 +108,8 @@ public class Chat {
             return lastPlayerName;
         }
 
-        StringBuilder stringBuilder = new StringBuilder(chatType.name());
+        StringBuilder stringBuilder = new StringBuilder(chatType.name()
+                                                                .charAt(0) + ": ");
         for (PlayerChatRole playerChatRole : playerChatRoles) {
             if (playerChatRole.getPlayerId()
                               .equals(chatNameFor))

@@ -175,7 +175,7 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
     private void createChat() {
         if (selectedPlayerUUIDs.size() == 1) {
             chatManager.createDirectChat(playerRef.getUuid(), selectedPlayerUUIDs.get(0));
-        } else if (selectedPlayerUUIDs.size() > 2) {
+        } else if (selectedPlayerUUIDs.size() > 1) {
             Chat groupChat = chatManager.createGroupChat(playerRef.getUuid());
             selectedPlayerUUIDs.forEach(uuid -> groupChat.addChatter(uuid, ChatRole.MEMBER));
         }
