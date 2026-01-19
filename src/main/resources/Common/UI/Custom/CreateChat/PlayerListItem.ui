@@ -4,7 +4,7 @@ Group {
     Anchor: (Height: 50, Width: 600/2);
     Padding: (Bottom: 5, Right: 5);
 
-    Button {
+    Button #PlayerListItemButton {
         LayoutMode: Left;
         Background: $C.@InputBoxBackground;
         Padding: (Left:10);

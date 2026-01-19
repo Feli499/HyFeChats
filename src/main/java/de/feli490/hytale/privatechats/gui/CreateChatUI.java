@@ -6,17 +6,22 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import de.feli490.hytale.privatechats.PrivateChatManager;
+import de.feli490.utils.core.common.tuple.Pair;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.PlayerUtils;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -30,6 +35,8 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
     private final PlayerDataProvider playerDataProvider;
     private final Supplier<CustomUIPage> returnPageSupplier;
 
+    private List<UUID> currentDisplayedUUIDs;
+
     private final List<UUID> selectedPlayerUUIDs;
     private String playerSearchQuery = "";
 
@@ -39,6 +46,7 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         this.chatManager = chatManager;
         this.playerDataProvider = playerDataProvider;
         this.returnPageSupplier = returnPageSupplier;
+        currentDisplayedUUIDs = Collections.emptyList();
 
         selectedPlayerUUIDs = new ArrayList<>();
         selectedPlayerUUIDs.add(playerRef.getUuid());
@@ -71,11 +79,30 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
         uiCommandBuilder.clear("#PlayerItems");
 
+        List<Pair<UUID, String>> filteredUUIDs = new ArrayList<>();
+
+        playerDataProvider.getAllKnownPlayerUUIDs()
+                          .forEach(uuid -> {
+                              String playerName = playerDataProvider.getLastPlayerName(uuid);
+                              filteredUUIDs.add(new Pair<>(uuid, playerName));
+                          });
+
+        if (!playerSearchQuery.isEmpty())
+            filteredUUIDs.removeIf(pair -> !pair.getSecond()
+                                                .toLowerCase()
+                                                .contains(playerSearchQuery));
+
+        filteredUUIDs.sort(Comparator.comparing(Pair::getSecond));
+        currentDisplayedUUIDs = filteredUUIDs.stream()
+                                             .map(Pair::getFirst)
+                                             .toList();
+
         int column = 0;
         int row = 0;
-        for (UUID currentUUID : playerDataProvider.getAllKnownPlayerUUIDs()) {
-            if (currentUUID.equals(playerRef.getUuid()))
-                continue;
+        for (Pair<UUID, String> pair : filteredUUIDs) {
+            UUID currentUUID = pair.getFirst();
+            //            if (currentUUID.equals(playerRef.getUuid()))
+            //                continue;
 
             if (column == 0) {
                 uiCommandBuilder.appendInline("#PlayerItems", "Group { LayoutMode: Left; Anchor: (Bottom: 0); }");
@@ -83,8 +110,12 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
             uiCommandBuilder.append("#PlayerItems[" + row + "]", "CreateChat/PlayerListItem.ui");
             uiCommandBuilder.set("#PlayerItems[" + row + "][" + column + "] #IsSelected.Value", selectedPlayerUUIDs.contains(currentUUID));
-            uiCommandBuilder.set("#PlayerItems[" + row + "][" + column + "] #PlayerName.Text",
-                                 playerDataProvider.getLastPlayerName(currentUUID));
+            uiEventBuilder.addEventBinding(CustomUIEventBindingType.Activating,
+                                           "#PlayerItems[" + row + "][" + column + "] #PlayerListItemButton",
+                                           EventData.of(CreateChatData.KEY_PLAYER_EDIT_UUID, currentUUID.toString()),
+                                           false);
+
+            uiCommandBuilder.set("#PlayerItems[" + row + "][" + column + "] #PlayerName.Text", pair.getSecond());
 
             ++column;
             if (column >= 3) {
@@ -110,14 +141,33 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
 
         if (data.getPlayerSearchQuery() != null) {
             playerSearchQuery = data.getPlayerSearchQuery();
+        } else if (data.getPlayerEditUUID() != null) {
+            toggleSelectedPlayer(data.getPlayerEditUUID());
         }
+    }
+
+    public void toggleSelectedPlayer(UUID playerUUID) {
+
+        if (selectedPlayerUUIDs.contains(playerUUID)) {
+            selectedPlayerUUIDs.remove(playerUUID);
+        } else {
+            selectedPlayerUUIDs.add(playerUUID);
+        }
+
+        int index = currentDisplayedUUIDs.indexOf(playerUUID);
+        int row = index / 2;
+        int column = index % 2;
+
+        UICommandBuilder uiCommandBuilder = new UICommandBuilder();
+        uiCommandBuilder.set("#PlayerItems[" + row + "][" + column + "] #IsSelected.Value", selectedPlayerUUIDs.contains(playerUUID));
+
+        sendUpdate(uiCommandBuilder, false);
     }
 
     public static class CreateChatData {
 
         static final String KEY_DISPLAY_CHAT_BUTTON_ACTION = "CreateChatButton";
         static final String KEY_PLAYER_EDIT_UUID = "PlayerEditUUID";
-        static final String KEY_PLAYER_EDIT_UUID_ACTION = "PlayerEditUUIDAction";
         static final String KEY_SEARCH_PLAYER_TEXT = "@SearchPlayerName";
 
         public static final BuilderCodec<CreateChatData> CODEC = BuilderCodec.builder(CreateChatData.class, CreateChatData::new)
@@ -129,10 +179,6 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
                                                                                                         Codec.UUID_STRING),
                                                                                        CreateChatData::setPlayerEditUUID,
                                                                                        CreateChatData::getPlayerEditUUID)
-                                                                             .addField(new KeyedCodec<>(KEY_PLAYER_EDIT_UUID_ACTION,
-                                                                                                        Codec.STRING),
-                                                                                       CreateChatData::setPlayerUUIDAction,
-                                                                                       CreateChatData::getPlayerUUIDAction)
                                                                              .addField(new KeyedCodec<>(KEY_SEARCH_PLAYER_TEXT,
                                                                                                         Codec.STRING),
                                                                                        CreateChatData::setPlayerSearchQuery,
@@ -159,15 +205,7 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
         }
 
         public void setPlayerSearchQuery(String playerSearchQuery) {
-            this.playerSearchQuery = playerSearchQuery;
-        }
-
-        public String getPlayerUUIDAction() {
-            return playerUUIDAction;
-        }
-
-        public void setPlayerUUIDAction(String playerUUIDAction) {
-            this.playerUUIDAction = playerUUIDAction;
+            this.playerSearchQuery = playerSearchQuery.toLowerCase();
         }
 
         public UUID getPlayerEditUUID() {
