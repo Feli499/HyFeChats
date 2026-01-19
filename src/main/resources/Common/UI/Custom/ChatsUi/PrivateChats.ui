@@ -13,7 +13,7 @@ $C.@Container {
         }
 
         $C.@Title{
-            @Text = "Private Chats";
+            @Text = "HyFe-Chats";
         }
     }
 
@@ -24,17 +24,12 @@ $C.@Container {
 
         Group #Buttons {
             LayoutMode: Left;
-            Anchor: (Left: 0, Height: 25, Width: 100);
+            Anchor: (Left: 0, Right: 0, Height: 45);
+            Padding: (Full: 5);
 
-            Button #CreateChat {
-                Background: $C.@InputBoxBackground;
-                Style:  ButtonStyle(
-                    Sounds: $C.@ButtonSounds,
-                );
-
-                Label {
-                    Text: "Create Chat";
-                }
+            $C.@TextButton #CreateChat {
+                Anchor: (Width: 200);
+                Text: "Create Chat";
             }
         }
 
