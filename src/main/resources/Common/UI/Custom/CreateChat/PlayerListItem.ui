@@ -18,6 +18,12 @@ Group {
 
         Label #PlayerName {
             Anchor: (Right: 30, Left: 11);
+            Style: (
+                FontSize: 18,
+                TextColor: #ffffff,
+                VerticalAlignment: Center,
+                RenderBold: true
+            );
 
             Text: "Label #PlayerName";
         }
