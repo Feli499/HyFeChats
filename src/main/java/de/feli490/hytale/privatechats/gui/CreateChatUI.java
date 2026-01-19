@@ -163,13 +163,14 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
     private void goToPreviousPage() {
         if (returnPageSupplier == null)
             return;
+        CustomUIPage customUIPage = returnPageSupplier.get();
         returnPageSupplier = null;
 
-        CustomUIPage customUIPage = returnPageSupplier.get();
         Ref<EntityStore> reference = playerRef.getReference();
         PlayerUtils.getPlayer(playerRef)
                    .getPageManager()
                    .openCustomPage(reference, reference.getStore(), customUIPage);
+        sendUpdate();
     }
 
     private void createChat() {
