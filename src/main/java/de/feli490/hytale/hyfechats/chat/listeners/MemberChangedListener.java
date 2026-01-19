@@ -1,7 +1,7 @@
-package de.feli490.hytale.privatechats.chat.listeners;
+package de.feli490.hytale.hyfechats.chat.listeners;
 
-import de.feli490.hytale.privatechats.chat.ChatRole;
-import de.feli490.hytale.privatechats.chat.PlayerChatRole;
+import de.feli490.hytale.hyfechats.chat.ChatRole;
+import de.feli490.hytale.hyfechats.chat.PlayerChatRole;
 
 public interface MemberChangedListener {
 

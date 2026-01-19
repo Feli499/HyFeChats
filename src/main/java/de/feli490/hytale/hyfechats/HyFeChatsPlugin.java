@@ -1,10 +1,10 @@
-package de.feli490.hytale.privatechats;
+package de.feli490.hytale.hyfechats;
 
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import de.feli490.hytale.privatechats.chat.ChatFactory;
-import de.feli490.hytale.privatechats.commands.ChatCommand;
+import de.feli490.hytale.hyfechats.chat.ChatFactory;
+import de.feli490.hytale.hyfechats.commands.ChatCommand;
 import de.feli490.utils.hytale.PlayerDataProviderInstance;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import java.io.IOException;
@@ -13,12 +13,12 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-public class PrivateChatsPlugin extends JavaPlugin {
+public class HyFeChatsPlugin extends JavaPlugin {
 
     private PrivateChatManager privateChatManager;
     private PlayerDataProvider playerDataProvider;
 
-    public PrivateChatsPlugin(@NonNullDecl JavaPluginInit init) {
+    public HyFeChatsPlugin(@NonNullDecl JavaPluginInit init) {
         super(init);
     }
 

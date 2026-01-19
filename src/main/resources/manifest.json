@@ -1,6 +1,6 @@
 {
   "Group": "Feli490.de",
-  "Name": "PrivateChats",
+  "Name": "HyFeChats",
   "Version": "1.0.0",
   "Description": "",
   "Authors": [
@@ -11,7 +11,7 @@
     }
   ],
   "Website": "https://feli490.de",
-  "Main": "de.feli490.hytale.privatechats.PrivateChatsPlugin",
+  "Main": "de.feli490.hytale.hyfechats.HyFeChatsPlugin",
   "ServerVersion": "*",
   "Dependencies": {
     "Feli490.de:FeliUtils": "*"

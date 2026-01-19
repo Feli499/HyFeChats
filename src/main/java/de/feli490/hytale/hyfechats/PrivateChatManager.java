@@ -1,8 +1,8 @@
-package de.feli490.hytale.privatechats;
+package de.feli490.hytale.hyfechats;
 
-import de.feli490.hytale.privatechats.chat.Chat;
-import de.feli490.hytale.privatechats.chat.ChatFactory;
-import de.feli490.hytale.privatechats.chat.ChatType;
+import de.feli490.hytale.hyfechats.chat.Chat;
+import de.feli490.hytale.hyfechats.chat.ChatFactory;
+import de.feli490.hytale.hyfechats.chat.ChatType;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;

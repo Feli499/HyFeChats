@@ -1,4 +1,4 @@
-package de.feli490.hytale.privatechats.chat;
+package de.feli490.hytale.hyfechats.chat;
 
 import java.util.UUID;
 

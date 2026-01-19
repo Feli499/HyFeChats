@@ -1,7 +1,7 @@
-package de.feli490.hytale.privatechats.chat;
+package de.feli490.hytale.hyfechats.chat;
 
-import de.feli490.hytale.privatechats.chat.listeners.MemberChangedListener;
-import de.feli490.hytale.privatechats.chat.listeners.ReceivedNewMessageListener;
+import de.feli490.hytale.hyfechats.chat.listeners.MemberChangedListener;
+import de.feli490.hytale.hyfechats.chat.listeners.ReceivedNewMessageListener;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package de.feli490.hytale.privatechats.gui;
+package de.feli490.hytale.hyfechats.gui;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -13,10 +13,10 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import de.feli490.hytale.privatechats.PrivateChatManager;
-import de.feli490.hytale.privatechats.chat.Chat;
-import de.feli490.hytale.privatechats.chat.ChatMessage;
-import de.feli490.hytale.privatechats.chat.listeners.ReceivedNewMessageListener;
+import de.feli490.hytale.hyfechats.PrivateChatManager;
+import de.feli490.hytale.hyfechats.chat.Chat;
+import de.feli490.hytale.hyfechats.chat.ChatMessage;
+import de.feli490.hytale.hyfechats.chat.listeners.ReceivedNewMessageListener;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.MessageUtils;
 import de.feli490.utils.hytale.utils.PlayerUtils;

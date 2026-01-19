@@ -1,4 +1,4 @@
-package de.feli490.hytale.privatechats.commands;
+package de.feli490.hytale.hyfechats.commands;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
@@ -7,8 +7,8 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncC
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import de.feli490.hytale.privatechats.PrivateChatManager;
-import de.feli490.hytale.privatechats.gui.CreateChatUI;
+import de.feli490.hytale.hyfechats.PrivateChatManager;
+import de.feli490.hytale.hyfechats.gui.CreateChatUI;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.CommandUtils;
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +24,7 @@ public class ChatCreateCommand extends AbstractAsyncCommand {
         this.chatManager = chatManager;
         this.playerDataProvider = playerDataProvider;
 
-        requirePermission("privatechats.chat.create");
+        requirePermission("cyfechats.chat.create");
     }
 
     @NonNullDecl
