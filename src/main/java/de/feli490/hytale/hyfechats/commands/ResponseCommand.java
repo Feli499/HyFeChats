@@ -36,7 +36,7 @@ public class ResponseCommand extends AbstractAsyncCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        String message = splitMessage[2];
+        String message = splitMessage[1];
 
         return CommandUtils.getPlayerRefFuture(commandContext)
                            .thenAccept(playerRef -> {
