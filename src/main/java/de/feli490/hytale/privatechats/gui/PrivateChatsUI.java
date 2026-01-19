@@ -7,7 +7,6 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -20,6 +19,7 @@ import de.feli490.hytale.privatechats.chat.ChatMessage;
 import de.feli490.hytale.privatechats.chat.listeners.ReceivedNewMessageListener;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import de.feli490.utils.hytale.utils.MessageUtils;
+import de.feli490.utils.hytale.utils.PlayerUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -141,11 +141,14 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
                 && (Objects.isNull(currentChat) || !Objects.equals(currentChat.getId(), data.displayChat)))
             setSelectedChat(getChat(data.displayChat));
         else if (data.createChatButtonPressed != null) {
-            var playerRef = store.getComponent(ref, PlayerRef.getComponentType());
-            var player = store.getComponent(ref, Player.getComponentType());
-            CreateChatUI page = new CreateChatUI(playerRef, lifetime, chatManager, playerDataProvider);
-            player.getPageManager()
-                  .openCustomPage(ref, store, page);
+            CreateChatUI page = new CreateChatUI(playerRef,
+                                                 lifetime,
+                                                 chatManager,
+                                                 playerDataProvider,
+                                                 () -> new PrivateChatsUI(playerRef, lifetime, chatManager, playerDataProvider));
+            PlayerUtils.getPlayer(playerRef)
+                       .getPageManager()
+                       .openCustomPage(ref, store, page);
             sendUpdate();
         }
     }

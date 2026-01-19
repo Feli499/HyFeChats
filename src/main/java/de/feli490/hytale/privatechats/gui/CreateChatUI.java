@@ -6,6 +6,8 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -13,9 +15,13 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import de.feli490.hytale.privatechats.PrivateChatManager;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
+import de.feli490.utils.hytale.utils.PlayerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateChatData> {
@@ -23,20 +29,32 @@ public class CreateChatUI extends InteractiveCustomUIPage<CreateChatUI.CreateCha
     private final List<UUID> selectedPlayerUUIDs;
     private final PrivateChatManager chatManager;
     private final PlayerDataProvider playerDataProvider;
+    private final Supplier<CustomUIPage> returnPageSupplier;
     private String playerSearchQuery = "";
 
     public CreateChatUI(@NonNullDecl PlayerRef playerRef, @NonNullDecl CustomPageLifetime lifetime, PrivateChatManager chatManager,
-            PlayerDataProvider playerDataProvider) {
+            PlayerDataProvider playerDataProvider, Supplier<CustomUIPage> returnPageSupplier) {
         super(playerRef, lifetime, CreateChatData.CODEC);
         this.chatManager = chatManager;
         this.playerDataProvider = playerDataProvider;
+        this.returnPageSupplier = returnPageSupplier;
 
         selectedPlayerUUIDs = new ArrayList<>();
     }
 
+    public CreateChatUI(@NonNullDecl PlayerRef playerRef, @NonNullDecl CustomPageLifetime lifetime, PrivateChatManager chatManager,
+            PlayerDataProvider playerDataProvider) {
+        this(playerRef, lifetime, chatManager, playerDataProvider, null);
+    }
+
     @Override
     public void onDismiss(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store) {
-        super.onDismiss(ref, store);
+        if (returnPageSupplier != null) {
+            Player player = PlayerUtils.getPlayer(playerRef);
+            CompletableFuture.delayedExecutor(1, TimeUnit.MILLISECONDS, player.getWorld())
+                             .execute(() -> player.getPageManager()
+                                                  .openCustomPage(ref, store, returnPageSupplier.get()));
+        }
     }
 
     @Override
