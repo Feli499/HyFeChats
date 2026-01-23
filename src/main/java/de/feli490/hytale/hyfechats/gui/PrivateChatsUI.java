@@ -50,8 +50,14 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
 
     @Override
     public void onDismiss(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store) {
-        if (currentChat != null)
-            currentChat.removeNewMessageListener(this);
+        if (currentChat != null) {
+            currentChat.opensChat(playerRef.getUuid());
+            return;
+        }
+
+        for (Chat chat : chats) {
+            chat.removeNewMessageListener(this);
+        }
     }
 
     @Override
@@ -77,6 +83,9 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
     }
 
     public void setSelectedChat(Chat chat) {
+
+        if (currentChat != null)
+            currentChat.opensChat(playerRef.getUuid());
 
         currentChat = chat;
 

@@ -44,7 +44,18 @@ public class Chat {
 
     public boolean hasUnreadMessages(UUID playerId) {
         PlayerChatProperties playerProperties = getPlayerChatProperties(playerId);
-        return playerProperties.getLastRead() < getLastMessage().timestamp();
+        List<ChatMessage> chatMessages = getMessagesSince(playerProperties.getLastRead());
+        if (chatMessages.isEmpty())
+            return false;
+        return !chatMessages.stream()
+                            .anyMatch(chatMessage -> chatMessage.senderId()
+                                                                .equals(playerId));
+    }
+
+    private List<ChatMessage> getMessagesSince(long lastRead) {
+        return messages.stream()
+                       .filter(message -> message.timestamp() > lastRead)
+                       .toList();
     }
 
     public void opensChat(UUID playerId) {
