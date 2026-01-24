@@ -22,6 +22,19 @@ Group {
     }
 
     Group {
+        FlexWeight: 1;
+        LayoutMode: BottomScrolling;
+        ScrollbarStyle: $C.@DefaultScrollbarStyle;
+        Background: #000000(0.2);
+        AutoScrollDown: true;
+
+        Group #MessageItem {
+            LayoutMode: Top;
+            Padding: (Left: 10, Top: 10, Right: 100);
+        }
+    }
+
+    Group {
         Anchor: (Height: 50);
         LayoutMode: Left;
         Padding: (Full: 0, Top: 4);
@@ -36,7 +49,7 @@ Group {
             );
             Style: (
                 FontSize: 18,
-                TextColor: #424a5e
+                TextColor: #ffffff
             );
             OutlineColor: #424a5e;
             OutlineSize: 2;
@@ -63,19 +76,6 @@ Group {
                 );
                 Text: "Send";
             }
-        }
-    }
-
-    Group {
-        FlexWeight: 1;
-        LayoutMode: BottomScrolling;
-        ScrollbarStyle: $C.@DefaultScrollbarStyle;
-        Background: #000000(0.2);
-        AutoScrollDown: true;
-
-        Group #MessageItem {
-            LayoutMode: Top;
-            Padding: (Left: 10, Top: 10, Right: 100);
         }
     }
 }
