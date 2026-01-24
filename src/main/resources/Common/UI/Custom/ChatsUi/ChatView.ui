@@ -24,18 +24,45 @@ Group {
     Group {
         Anchor: (Height: 50);
         LayoutMode: Left;
+        Padding: (Full: 0, Top: 6);
 
         TextField #NewMessage {
-            Style: $C.@DefaultInputFieldStyle;
-            Background: $C.@InputBoxBackground;
             Padding: (Left:5);
             FlexWeight: 1;
             PlaceholderText: "Write a message...";
+            PlaceholderStyle: (
+                FontSize: 18,
+                TextColor: #96a9be(0.4)
+            );
+            Style: (
+                FontSize: 18,
+                TextColor: #96a9be
+            );
+            OutlineColor: #96a9be;
+            OutlineSize: 2;
         }
 
-        $C.@TextButton #SendMessageButton {
+        Button #SendMessageButton {
             Anchor: (Width: 100, Right: 0);
-            Text: "Send";
+            Style: ButtonStyle(
+                Sounds: $C.@ButtonSounds,
+                Default: (Background: #263047),
+                Hovered: (Background: #263047(0.8))
+            );
+            OutlineColor: #7888a1;
+            OutlineSize: 2;
+
+            Label {
+                FlexWeight: 1;
+                Style: (
+                    FontSize: 22,
+                    TextColor: #96a9be,
+                    HorizontalAlignment: Center,
+                    VerticalAlignment: Center,
+                    RenderBold: true
+                );
+                Text: "Send";
+            }
         }
     }
 
