@@ -19,17 +19,37 @@ $C.@Container {
 
     Group {
         LayoutMode: Top;
-        Anchor: (Top: 36);
-        Padding: (Full: 10);
+        Anchor: (Top: 37);
+        Padding: (Full: 8, Top: 0);
 
         Group #Buttons {
-            LayoutMode: Left;
-            Anchor: (Left: 0, Right: 0, Height: 45);
-            Padding: (Full: 5);
+            LayoutMode: Right;
+            Anchor: (Left: -1, Right: -1, Height: 55);
+            Padding: (Top: 5, Bottom: 3);
 
-            $C.@TextButton #CreateChat {
+            Button #CreateChat {
+                LayoutMode: Top;
                 Anchor: (Width: 200);
-                Text: "Create Chat";
+                Padding: (Full: 10);
+                Style: ButtonStyle(
+                    Sounds: $C.@ButtonSounds,
+                    Hovered: (Background: #263047(0.8))
+                );
+                Background: #263047;
+                OutlineColor: #424a5e;
+                OutlineSize: 2;
+
+                Label {
+                    FlexWeight: 1;
+                    Style: (
+                        FontSize: 22,
+                        TextColor: #96a9be,
+                        HorizontalAlignment: Center,
+                        VerticalAlignment: Center,
+                        RenderBold: true
+                    );
+                    Text: "Create Chat";
+                }
             }
         }
 
