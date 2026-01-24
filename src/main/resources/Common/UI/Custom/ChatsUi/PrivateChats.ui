@@ -19,7 +19,7 @@ $C.@Container {
 
     Group {
         LayoutMode: Top;
-        Anchor: (Top: 37);
+        Anchor: (Top: 40);
         Padding: (Full: 8, Top: 0);
 
         Group #Content {
@@ -34,7 +34,7 @@ $C.@Container {
                     LayoutMode: Left;
                     Anchor: (Height: 30);
                     Padding: (Left: 5, Right: 11);
-                    Background: #203551;
+                    Background: #2f4e77;
 
                     Label {
                         FlexWeight: 1;
@@ -93,7 +93,7 @@ $C.@Container {
                     Button {
                         LayoutMode: Top;
                         Anchor: (Height: 30);
-                        Background: #203551;
+                        Background: #2f4e77;
                     }
 
                     Group {
