@@ -68,9 +68,10 @@ Group {
 
     Group {
         FlexWeight: 1;
-        LayoutMode: TopScrolling;
+        LayoutMode: BottomScrolling;
         ScrollbarStyle: $C.@DefaultScrollbarStyle;
         Background: #000000(0.2);
+        AutoScrollDown: true;
 
         Group #MessageItem {
             LayoutMode: Top;

@@ -121,7 +121,7 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
 
         messages.sort((message1, message2) -> Long.compare(message2.timestamp(), message1.timestamp()));
 
-        for (int i = 0; i < messages.size(); i++) {
+        for (int i = messages.size() - 1; i >= 0; i--) {
             ChatMessage chatMessage = messages.get(i);
             uiCommandBuilder.append(selector, "ChatsUi/ChatMessage.ui");
 
@@ -130,9 +130,10 @@ public class PrivateChatsUI extends InteractiveCustomUIPage<PrivateChatsUI.Priva
             if (lastPlayerName == null)
                 lastPlayerName = "Unknown (" + playerUUID + ")";
 
-            uiCommandBuilder.set(selector + "[" + i + "] #DisplayName.Text", lastPlayerName + ": ");
-            uiCommandBuilder.set(selector + "[" + i + "] #Message.Text", chatMessage.message());
-            uiCommandBuilder.set(selector + "[" + i + "].TooltipTextSpans",
+            int uiIndex = messages.size() - i - 1;
+            uiCommandBuilder.set(selector + "[" + uiIndex + "] #DisplayName.Text", lastPlayerName + ": ");
+            uiCommandBuilder.set(selector + "[" + uiIndex + "] #Message.Text", chatMessage.message());
+            uiCommandBuilder.set(selector + "[" + uiIndex + "].TooltipTextSpans",
                                  messageBuilderFactory.timestamp(chatMessage.timestamp(), Color.WHITE));
         }
 
