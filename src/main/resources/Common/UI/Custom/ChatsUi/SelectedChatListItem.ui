@@ -11,6 +11,8 @@ Group {
       Sounds: $C.@ButtonSounds,
     );
     Background: #263047(0.4);
+    OutlineColor: #424a5e;
+    OutlineSize: 2;
 
 
     Label #ChatName {

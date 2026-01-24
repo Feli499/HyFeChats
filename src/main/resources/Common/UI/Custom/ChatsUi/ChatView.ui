@@ -32,13 +32,13 @@ Group {
             PlaceholderText: "Write a message...";
             PlaceholderStyle: (
                 FontSize: 18,
-                TextColor: #96a9be(0.4)
+                TextColor: #7888a1(0.4)
             );
             Style: (
                 FontSize: 18,
-                TextColor: #96a9be
+                TextColor: #7888a1
             );
-            OutlineColor: #96a9be;
+            OutlineColor: #7888a1;
             OutlineSize: 2;
         }
 
@@ -46,9 +46,9 @@ Group {
             Anchor: (Width: 100, Right: 0);
             Style: ButtonStyle(
                 Sounds: $C.@ButtonSounds,
-                Default: (Background: #263047),
                 Hovered: (Background: #263047(0.8))
             );
+            Background: #263047;
             OutlineColor: #7888a1;
             OutlineSize: 2;
 
