@@ -62,6 +62,12 @@ public class PrivateChatManager {
                     .orElse(null);
     }
 
+    public boolean hasUnreadChat(UUID playerId) {
+        return chats.stream()
+                    .filter(chat -> chat.isMember(playerId))
+                    .anyMatch(chat -> chat.hasUnreadMessages(playerId));
+    }
+
     public Chat createGroupChat(UUID owner, List<UUID> memberUUIDs) {
 
         Stream<Chat> chatStream = chats.stream()

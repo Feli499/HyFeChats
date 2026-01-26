@@ -44,6 +44,8 @@ public class Chat {
 
     public boolean hasUnreadMessages(UUID playerId) {
         PlayerChatProperties playerProperties = getPlayerChatProperties(playerId);
+        if (playerProperties == null)
+            return false;
         List<ChatMessage> chatMessages = getMessagesSince(playerProperties.getLastRead());
         if (chatMessages.isEmpty())
             return false;

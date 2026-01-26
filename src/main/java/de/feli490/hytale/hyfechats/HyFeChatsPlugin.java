@@ -1,6 +1,8 @@
 package de.feli490.hytale.hyfechats;
 
+import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
+import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import de.feli490.hytale.hyfechats.chat.ChatFactory;
@@ -12,6 +14,7 @@ import de.feli490.hytale.hyfechats.commands.ResponseCommand;
 import de.feli490.hytale.hyfechats.data.ChatDataLoader;
 import de.feli490.hytale.hyfechats.data.JsonChatDataLoader;
 import de.feli490.hytale.hyfechats.data.MemoryChatDataLoader;
+import de.feli490.hytale.hyfechats.events.PlayerUnreadChatsOnJoinEvent;
 import de.feli490.utils.hytale.PlayerDataProviderInstance;
 import de.feli490.utils.hytale.message.MessageBuilderFactory;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
@@ -59,7 +62,7 @@ public class HyFeChatsPlugin extends JavaPlugin {
         chatFactory.addPlayerOpensChatListenerForCreation(new SaveChatPlayerOpensChatListener(getLogger(), chatDataLoader));
         chatFactory.addMessageListenerForCreation(new SendMessagesToChatReceivedNewMessageListener(messageBuilderFactory,
                                                                                                    playerDataProvider));
-        
+
         privateChatManager = new PrivateChatManager(getLogger(), chatFactory, chatDataLoader);
 
         getLogger().at(Level.INFO).log("Successfuly loaded the Plugin!");
@@ -69,6 +72,7 @@ public class HyFeChatsPlugin extends JavaPlugin {
     protected void start() {
 
         setupCommands();
+        setupEvents();
 
         getLogger().at(Level.INFO).log("Successfuly started the Plugin!");
     }
@@ -84,6 +88,11 @@ public class HyFeChatsPlugin extends JavaPlugin {
         if (!Files.exists(dataDirectory)) {
             Files.createDirectory(dataDirectory);
         }
+    }
+
+    private void setupEvents() {
+        EventRegistry eventRegistry = getEventRegistry();
+        eventRegistry.registerGlobal(PlayerReadyEvent.class, new PlayerUnreadChatsOnJoinEvent(messageBuilderFactory, privateChatManager));
     }
 
     private void setupCommands() {
