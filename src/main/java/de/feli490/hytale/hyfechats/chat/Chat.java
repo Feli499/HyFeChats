@@ -109,6 +109,10 @@ public class Chat {
 
     public void sendMessage(UUID senderId, String message) {
 
+        message = message.trim();
+        if (messages.isEmpty())
+            return;
+
         ChatMessage chatMessage = new ChatMessage(UUID.randomUUID(), senderId, message, System.currentTimeMillis());
         messages.add(chatMessage);
         List.copyOf(messageListeners)
