@@ -35,7 +35,7 @@
         <dependency>
             <groupId>de.feli490.utils.hytale</groupId>
             <artifactId>FeliUtils-Hytale</artifactId>
-            <version>1.1.1-SNAPSHOT</version>
+            <version>1.1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
