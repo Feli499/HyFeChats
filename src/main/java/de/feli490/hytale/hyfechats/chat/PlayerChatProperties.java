@@ -5,6 +5,8 @@ import java.util.UUID;
 
 public class PlayerChatProperties {
 
+    private final Chat chat;
+
     private final UUID playerId;
     private final long memberSince;
 
@@ -13,8 +15,9 @@ public class PlayerChatProperties {
     private long lastRead;
     private DisplayUnreadProperty displayUnreadProperty;
 
-    public PlayerChatProperties(UUID playerId, long memberSince, ChatRole role, long lastRead,
+    public PlayerChatProperties(Chat chat, UUID playerId, long memberSince, ChatRole role, long lastRead,
             DisplayUnreadProperty displayUnreadProperty) {
+        this.chat = chat;
         this.playerId = playerId;
         this.memberSince = memberSince;
 
@@ -24,8 +27,8 @@ public class PlayerChatProperties {
         this.displayUnreadProperty = displayUnreadProperty;
     }
 
-    public PlayerChatProperties(UUID playerId, ChatRole role) {
-        this(playerId, System.currentTimeMillis(), role, System.currentTimeMillis(), DisplayUnreadProperty.ALWAYS);
+    public PlayerChatProperties(Chat chat, UUID playerId, ChatRole role) {
+        this(chat, playerId, System.currentTimeMillis(), role, System.currentTimeMillis(), DisplayUnreadProperty.ALWAYS);
     }
 
     public UUID getPlayerId() {
