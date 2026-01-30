@@ -62,7 +62,7 @@ public class JsonChatDataSaver implements ChatDataSaver {
         FileUtils.loadOrCreate(messagesFile);
 
         JsonMessageData jsonMessageData = new JsonMessageData(message);
-        try (FileWriter fileWriter = new FileWriter(messagesFile.toFile())) {
+        try (FileWriter fileWriter = new FileWriter(messagesFile.toFile(), true)) {
             String json = jsonMessageData.toJson();
             fileWriter.append(json + "\n");
         }
