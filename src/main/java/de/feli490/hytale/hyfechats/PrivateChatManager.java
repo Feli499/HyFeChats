@@ -11,6 +11,7 @@ import de.feli490.hytale.hyfechats.chat.listeners.MemberChangedListener;
 import de.feli490.hytale.hyfechats.chat.listeners.ReceivedNewMessageListener;
 import de.feli490.hytale.hyfechats.data.ChatData;
 import de.feli490.hytale.hyfechats.data.ChatDataLoader;
+import de.feli490.hytale.hyfechats.data.ChatDataSaver;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -27,11 +28,13 @@ public class PrivateChatManager {
     private final HytaleLogger logger;
     private final ChatFactory chatFactory;
     private final ChatDataLoader chatDataLoader;
+    private final ChatDataSaver chatDataSaver;
 
-    public PrivateChatManager(HytaleLogger logger, ChatFactory chatFactory, ChatDataLoader chatDataLoader) {
+    public PrivateChatManager(HytaleLogger logger, ChatFactory chatFactory, ChatDataLoader chatDataLoader, ChatDataSaver chatDataSaver) {
         this.logger = logger.getSubLogger("PrivateChatManager");
         this.chatFactory = chatFactory;
         this.chatDataLoader = chatDataLoader;
+        this.chatDataSaver = chatDataSaver;
         chats = new HashSet<>();
 
         ChatManagerChatListener chatManagerChatListener = new ChatManagerChatListener(this);
@@ -115,7 +118,7 @@ public class PrivateChatManager {
 
     private void saveChat(Chat chat) {
         try {
-            chatDataLoader.saveChat(chat);
+            chatDataSaver.saveChat(chat);
         } catch (IOException e) {
             logger.at(Level.SEVERE)
                   .withCause(e)

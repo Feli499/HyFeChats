@@ -12,12 +12,13 @@ import de.feli490.hytale.hyfechats.commands.ChatCommand;
 import de.feli490.hytale.hyfechats.commands.MsgCommand;
 import de.feli490.hytale.hyfechats.commands.ResponseCommand;
 import de.feli490.hytale.hyfechats.data.ChatDataLoader;
+import de.feli490.hytale.hyfechats.data.ChatDataSaver;
 import de.feli490.hytale.hyfechats.data.JsonChatDataLoader;
 import de.feli490.hytale.hyfechats.data.MemoryChatDataLoader;
 import de.feli490.hytale.hyfechats.events.PlayerUnreadChatsOnJoinEvent;
-import de.feli490.utils.hytale.PlayerDataProviderInstance;
 import de.feli490.utils.hytale.message.MessageBuilderFactory;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
+import de.feli490.utils.hytale.playerdata.PlayerDataProviderService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,22 +49,27 @@ public class HyFeChatsPlugin extends JavaPlugin {
         }
 
         ChatDataLoader chatDataLoader;
+        ChatDataSaver chatDataSaver;
         try {
-            chatDataLoader = new JsonChatDataLoader(getLogger(), getDataDirectory().resolve("chats"));
+            JsonChatDataLoader chats = new JsonChatDataLoader(getLogger(), getDataDirectory().resolve("chats"));
+            chatDataLoader = chats;
+            chatDataSaver = chats;
         } catch (Exception e) {
-            chatDataLoader = new MemoryChatDataLoader();
+            MemoryChatDataLoader memoryChatDataLoader = new MemoryChatDataLoader();
+            chatDataLoader = memoryChatDataLoader;
+            chatDataSaver = memoryChatDataLoader;
             getLogger().at(Level.SEVERE)
                        .withCause(e)
                        .log("Could not load chats! Using MemoryChatDataLoader instead...");
         }
 
-        playerDataProvider = PlayerDataProviderInstance.get();
+        playerDataProvider = PlayerDataProviderService.get();
         ChatFactory chatFactory = new ChatFactory(playerDataProvider);
-        chatFactory.addPlayerOpensChatListenerForCreation(new SaveChatPlayerOpensChatListener(getLogger(), chatDataLoader));
+        chatFactory.addPlayerOpensChatListenerForCreation(new SaveChatPlayerOpensChatListener(getLogger(), chatDataSaver));
         chatFactory.addMessageListenerForCreation(new SendMessagesToChatReceivedNewMessageListener(messageBuilderFactory,
                                                                                                    playerDataProvider));
 
-        privateChatManager = new PrivateChatManager(getLogger(), chatFactory, chatDataLoader);
+        privateChatManager = new PrivateChatManager(getLogger(), chatFactory, chatDataLoader, chatDataSaver);
 
         getLogger().at(Level.INFO).log("Successfuly loaded the Plugin!");
     }
