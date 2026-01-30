@@ -24,7 +24,7 @@ public class JsonChatDataLoader implements ChatDataLoader {
 
     public JsonChatDataLoader(HytaleLogger logger, Path path) throws IOException {
 
-        this.logger = logger.getSubLogger("JsonChatWriter");
+        this.logger = logger.getSubLogger("JsonChatDataLoader");
         directory = path;
         
         if (!Files.exists(path))

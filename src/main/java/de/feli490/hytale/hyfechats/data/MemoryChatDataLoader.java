@@ -2,10 +2,10 @@ package de.feli490.hytale.hyfechats.data;
 
 import de.feli490.hytale.hyfechats.chat.Chat;
 import de.feli490.hytale.hyfechats.chat.ChatMessage;
+import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 public class MemoryChatDataLoader implements ChatDataLoader, ChatDataSaver {
     @Override
@@ -14,7 +14,7 @@ public class MemoryChatDataLoader implements ChatDataLoader, ChatDataSaver {
     }
 
     @Override
-    public void deleteChat(UUID chatId) {
+    public void deleteChat(Chat chat) throws IOException {
 
     }
 
@@ -24,7 +24,7 @@ public class MemoryChatDataLoader implements ChatDataLoader, ChatDataSaver {
     }
 
     @Override
-    public void savePlayerChatProperties(ChatMessage message) throws IOException {
+    public void savePlayerChatProperties(PlayerChatProperties playerChatProperties) throws IOException {
 
     }
 

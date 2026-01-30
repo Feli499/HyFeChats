@@ -66,7 +66,7 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader {
         }
     }
 
-    public static class JsonChatData implements ChatData {
+    private static class JsonChatData implements ChatData {
 
         public static Codec<JsonChatData> CODEC = BuilderCodec.builder(SingleChatFileJsonChatDataLoader.JsonChatData.class,
                                                                        SingleChatFileJsonChatDataLoader.JsonChatData::new)
@@ -176,7 +176,7 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader {
         }
     }
 
-    public static class JsonPlayerChatProperties {
+    private static class JsonPlayerChatProperties {
 
         public static Codec<JsonPlayerChatProperties> CODEC = BuilderCodec.builder(JsonPlayerChatProperties.class,
                                                                                    JsonPlayerChatProperties::new)
@@ -264,7 +264,7 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader {
         }
     }
 
-    public static class JsonMessageData {
+    private static class JsonMessageData {
 
         public static Codec<JsonMessageData> CODEC = BuilderCodec.builder(JsonMessageData.class, JsonMessageData::new)
                                                                  .addField(new KeyedCodec<>("Id", Codec.UUID_STRING),

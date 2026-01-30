@@ -1,6 +1,7 @@
 package de.feli490.hytale.hyfechats.data.json.dataobjects;
 
 import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.ExtraInfo;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import de.feli490.hytale.hyfechats.chat.Chat;
@@ -42,6 +43,11 @@ public class JsonMessageData {
         this.senderId = message.senderId();
         this.message = message.message();
         this.timestamp = message.timestamp();
+    }
+
+    public String toJson() {
+        return CODEC.encode(this, ExtraInfo.THREAD_LOCAL.get())
+                    .toString();
     }
 
     public ChatMessage toChatMessage(Chat chat) {

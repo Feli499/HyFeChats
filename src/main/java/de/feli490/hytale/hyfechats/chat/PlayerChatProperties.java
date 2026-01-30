@@ -31,6 +31,10 @@ public class PlayerChatProperties {
         this(chat, playerId, System.currentTimeMillis(), role, System.currentTimeMillis(), DisplayUnreadProperty.ALWAYS);
     }
 
+    public Chat getChat() {
+        return chat;
+    }
+
     public UUID getPlayerId() {
         return playerId;
     }

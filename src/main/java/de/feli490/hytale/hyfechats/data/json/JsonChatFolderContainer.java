@@ -12,6 +12,10 @@ public class JsonChatFolderContainer {
         this.path = path;
     }
 
+    public Path getPath() {
+        return path;
+    }
+
     public Path getMessagesFile() {
         return path.resolve("messages.dat");
     }
