@@ -66,6 +66,11 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader, Deletab
                 Files.deleteIfExists(path);
             }
         }
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(directory, "*.json.bak")) {
+            for (Path path : paths) {
+                Files.deleteIfExists(path);
+            }
+        }
     }
 
     private static class JsonChatData implements ChatData {
