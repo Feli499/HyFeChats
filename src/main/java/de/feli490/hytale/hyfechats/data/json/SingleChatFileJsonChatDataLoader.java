@@ -1,4 +1,4 @@
-package de.feli490.hytale.hyfechats.data;
+package de.feli490.hytale.hyfechats.data.json;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -12,6 +12,8 @@ import de.feli490.hytale.hyfechats.chat.ChatRole;
 import de.feli490.hytale.hyfechats.chat.ChatType;
 import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
 import de.feli490.hytale.hyfechats.chat.playerchatproperties.DisplayUnreadProperty;
+import de.feli490.hytale.hyfechats.data.ChatData;
+import de.feli490.hytale.hyfechats.data.ChatDataLoader;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
