@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.bson.BsonValue;
 
-public class JsonChatDataLoader implements ChatDataLoader {
+public class JsonChatDataLoader implements ChatDataLoader, ChatDataSaver {
 
     private final Path directory;
     private final HytaleLogger logger;

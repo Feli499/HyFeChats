@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public class MemoryChatDataLoader implements ChatDataLoader {
+public class MemoryChatDataLoader implements ChatDataLoader, ChatDataSaver {
     @Override
     public Collection<ChatData> loadChats() {
         return List.of();
@@ -30,7 +30,7 @@ public class MemoryChatDataLoader implements ChatDataLoader {
 
     @Override
     public void savePlayerChatProperties(ChatMessage message) throws IOException {
-        
+
     }
 
     @Override
