@@ -13,7 +13,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.bson.BsonString;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
 
 public class JsonMessageData {
 
@@ -46,8 +47,8 @@ public class JsonMessageData {
     }
 
     public String toJson() {
-        return CODEC.encode(this, ExtraInfo.THREAD_LOCAL.get())
-                    .toString();
+        BsonValue encode = CODEC.encode(this, ExtraInfo.THREAD_LOCAL.get());
+        return encode.toString();
     }
 
     public ChatMessage toChatMessage(Chat chat) {
@@ -95,7 +96,8 @@ public class JsonMessageData {
             for (String line : lines) {
                 if (line.isBlank())
                     continue;
-                JsonMessageData decode = JsonMessageData.CODEC.decode(new BsonString(line));
+                BsonDocument bsonDocument = BsonDocument.parse(line);
+                JsonMessageData decode = JsonMessageData.CODEC.decode(bsonDocument);
                 messages.add(decode);
             }
         }
