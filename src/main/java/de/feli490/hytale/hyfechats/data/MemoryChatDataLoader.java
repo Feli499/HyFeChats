@@ -19,11 +19,6 @@ public class MemoryChatDataLoader implements ChatDataLoader, ChatDataSaver {
     }
 
     @Override
-    public void saveChat(Chat chat) {
-
-    }
-
-    @Override
     public void saveMessage(ChatMessage message) throws IOException {
 
     }
@@ -34,7 +29,7 @@ public class MemoryChatDataLoader implements ChatDataLoader, ChatDataSaver {
     }
 
     @Override
-    public void saveChats(Collection<Chat> chats) {
+    public void saveChatMetaData(Chat chat) throws IOException {
 
     }
 }
