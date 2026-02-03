@@ -1,6 +1,6 @@
 package de.feli490.hytale.hyfechats.data.properties;
 
-interface HyFeProperty<T> {
+public interface HyFeProperty<T> {
 
     String getKey();
 
