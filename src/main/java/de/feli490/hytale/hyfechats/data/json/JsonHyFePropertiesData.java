@@ -9,9 +9,6 @@ import de.feli490.hytale.hyfechats.data.properties.HyFeProperty;
 public class JsonHyFePropertiesData {
     public final static Codec<JsonHyFePropertiesData> CODEC = BuilderCodec.builder(JsonHyFePropertiesData.class,
                                                                                    JsonHyFePropertiesData::new)
-                                                                    .addField(new KeyedCodec<>("PropertyClass", Codec.STRING),
-                                                                              JsonHyFePropertiesData::setPropertyClass,
-                                                                              JsonHyFePropertiesData::getPropertyClass)
                                                                     .addField(new KeyedCodec<>("Key", Codec.STRING),
                                                                               JsonHyFePropertiesData::setKey,
                                                                               JsonHyFePropertiesData::getKey)
@@ -24,25 +21,14 @@ public class JsonHyFePropertiesData {
                                                                                           JsonHyFePropertiesData[]::new,
                                                                                           JsonHyFePropertiesData::new);
 
-    private String propertyClass;
     private String key;
     private String value;
 
     public JsonHyFePropertiesData() {}
 
     public JsonHyFePropertiesData(HyFeProperty<?> property) {
-        propertyClass = property.getClass()
-                                .getSimpleName();
         key = property.getKey();
         value = property.getValueAsString();
-    }
-
-    public String getPropertyClass() {
-        return propertyClass;
-    }
-
-    private void setPropertyClass(String propertyClass) {
-        this.propertyClass = propertyClass;
     }
 
     public String getKey() {
