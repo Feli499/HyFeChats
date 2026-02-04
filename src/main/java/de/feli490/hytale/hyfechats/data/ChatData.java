@@ -5,6 +5,7 @@ import de.feli490.hytale.hyfechats.chat.ChatMessage;
 import de.feli490.hytale.hyfechats.chat.ChatType;
 import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,6 +15,8 @@ public interface ChatData {
     long getCreated();
 
     ChatType getChatType();
+
+    Map<String, String> getProperties();
 
     Set<PlayerChatProperties> getPlayerChatProperties(Chat chat);
 

@@ -5,6 +5,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import de.feli490.hytale.hyfechats.chat.Chat;
 import de.feli490.hytale.hyfechats.chat.ChatType;
+import de.feli490.hytale.hyfechats.data.json.JsonHyFePropertiesData;
 import java.util.UUID;
 
 public class JsonChatMetaData {
@@ -19,18 +20,28 @@ public class JsonChatMetaData {
                                                               .addField(new KeyedCodec<>("Created", Codec.LONG),
                                                                         JsonChatMetaData::setCreated,
                                                                         JsonChatMetaData::getCreated)
+                                                              .addField(new KeyedCodec<>("Properties", JsonHyFePropertiesData.ARRAY_CODEC),
+                                                                        JsonChatMetaData::setProperties,
+                                                                        JsonChatMetaData::getProperties)
                                                               .build();
 
     private UUID id;
     private ChatType chatType;
     private long created;
+    private JsonHyFePropertiesData[] properties;
 
-    private JsonChatMetaData() {}
+    private JsonChatMetaData() {
+        properties = new JsonHyFePropertiesData[0];
+    }
 
     public JsonChatMetaData(Chat chat) {
         this.id = chat.getId();
         this.chatType = chat.getChatType();
         this.created = chat.getCreated();
+        this.properties = chat.getProperties()
+                              .stream()
+                              .map(JsonHyFePropertiesData::new)
+                              .toArray(JsonHyFePropertiesData[]::new);
     }
 
     public UUID getId() {
@@ -57,4 +68,11 @@ public class JsonChatMetaData {
         this.chatType = ChatType.valueOf(chatType);
     }
 
+    public JsonHyFePropertiesData[] getProperties() {
+        return properties;
+    }
+
+    private void setProperties(JsonHyFePropertiesData[] properties) {
+        this.properties = properties;
+    }
 }

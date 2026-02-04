@@ -7,10 +7,13 @@ import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
 import de.feli490.hytale.hyfechats.data.ChatData;
 import de.feli490.hytale.hyfechats.data.json.JsonHyFePropertiesData;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class JsonChatData implements ChatData {
 
@@ -51,6 +54,13 @@ public class JsonChatData implements ChatData {
     @Override
     public ChatType getChatType() {
         return ChatType.valueOf(metaData.getChatTypeString());
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+
+        return Arrays.stream(metaData.getProperties())
+                     .collect(Collectors.toMap(JsonHyFePropertiesData::getKey, JsonHyFePropertiesData::getValue));
     }
 
     @Override

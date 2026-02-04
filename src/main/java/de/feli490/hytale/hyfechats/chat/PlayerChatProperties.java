@@ -80,6 +80,10 @@ public class PlayerChatProperties {
                   .setValueFromString(value);
     }
 
+    public Collection<HyFeProperty<?>> getProperties() {
+        return properties.values();
+    }
+
     public DisplayUnreadProperty getDisplayUnreadProperty() {
 
         HyFeProperty<?> hyFeProperty = properties.get(DISPLAY_UNREAD_PROPERTIES);
@@ -92,9 +96,5 @@ public class PlayerChatProperties {
     public String toString() {
         return "PlayerChatProperties{" + "chat=" + chat.getId() + ", playerId=" + playerId + ", memberSince=" + memberSince + ", role="
                 + role + ", lastRead=" + lastRead + ", properties=" + properties + '}';
-    }
-
-    public Collection<HyFeProperty<?>> getProperties() {
-        return properties.values();
     }
 }

@@ -4,14 +4,19 @@ import de.feli490.hytale.hyfechats.chat.listeners.MemberChangedListener;
 import de.feli490.hytale.hyfechats.chat.listeners.PlayerOpensChatListener;
 import de.feli490.hytale.hyfechats.chat.listeners.ReceivedNewMessageListener;
 import de.feli490.hytale.hyfechats.data.ChatData;
+import de.feli490.hytale.hyfechats.data.properties.HyFeProperty;
 import de.feli490.utils.hytale.playerdata.PlayerDataProvider;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Chat {
 
@@ -30,6 +35,8 @@ public class Chat {
     private final Set<MemberChangedListener> memberChangedListeners = new HashSet<>();
     private final Set<PlayerOpensChatListener> playerOpensChatListeners = new HashSet<>();
 
+    private final Map<String, HyFeProperty<?>> properties;
+
     public Chat(UUID id, ChatType chatType, long created, PlayerDataProvider playerDataProvider) {
         this.id = id;
         this.chatType = chatType;
@@ -40,6 +47,10 @@ public class Chat {
         messages = new ArrayList<>();
         unmodifiableMessageList = Collections.unmodifiableList(messages);
         unmodifiablePlayerChatProperties = Collections.unmodifiableSet(playerChatProperties);
+
+        List<HyFeProperty<?>> properties = List.of();
+        this.properties = properties.stream()
+                                    .collect(Collectors.toUnmodifiableMap(HyFeProperty::getKey, Function.identity()));
     }
 
     public boolean hasUnreadMessages(UUID playerId) {
@@ -52,6 +63,19 @@ public class Chat {
         return !chatMessages.stream()
                             .anyMatch(chatMessage -> chatMessage.senderId()
                                                                 .equals(playerId));
+    }
+
+    public void setProperty(String key, String value) {
+
+        if (!properties.containsKey(key))
+            throw new IllegalArgumentException("Property with key " + key + " does not exist!");
+
+        properties.get(key)
+                  .setValueFromString(value);
+    }
+
+    public Collection<HyFeProperty<?>> getProperties() {
+        return properties.values();
     }
 
     private List<ChatMessage> getMessagesSince(long lastRead) {
@@ -218,6 +242,12 @@ public class Chat {
         Chat chat = new Chat(chatData.getId(), chatData.getChatType(), chatData.getCreated(), playerDataProvider);
         chat.messages.addAll(chatData.getMessages(chat));
         chat.playerChatProperties.addAll(chatData.getPlayerChatProperties(chat));
+
+        for (Map.Entry<String, String> property : chatData.getProperties()
+                                                          .entrySet()) {
+            chat.setProperty(property.getKey(), property.getValue());
+        }
+
         return chat;
     }
 
