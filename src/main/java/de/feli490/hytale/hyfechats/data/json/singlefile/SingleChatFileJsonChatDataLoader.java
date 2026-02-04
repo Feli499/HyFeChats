@@ -266,8 +266,11 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader, Deletab
         }
 
         public PlayerChatProperties toPlayerChatProperties(Chat chat) {
-            PlayerChatProperties playerChatProperties = new PlayerChatProperties(chat, playerId, memberSince, role, lastRead);
-            playerChatProperties.setProperty(PlayerChatProperties.DISPLAY_UNREAD_PROPERTIES, displayUnreadProperty.name());
+            PlayerChatProperties playerChatProperties = new PlayerChatProperties(chat, playerId);
+            playerChatProperties.setProperty(PlayerChatProperties.MEMBER_SINCE_PROPERTY, Long.toString(memberSince));
+            playerChatProperties.setProperty(PlayerChatProperties.CHAT_ROLE_PROPERTY, role.name());
+            playerChatProperties.setProperty(PlayerChatProperties.LAST_READ_PROPERTY, Long.toString(lastRead));
+            playerChatProperties.setProperty(PlayerChatProperties.DISPLAY_UNREAD_PROPERTY, displayUnreadProperty.name());
             return playerChatProperties;
         }
     }

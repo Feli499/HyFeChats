@@ -34,4 +34,9 @@ public abstract class AbstractHyFeProperty<T> implements HyFeProperty<T> {
     public String getValueAsString() {
         return value.toString();
     }
+
+    @Override
+    public String toString() {
+        return "AbstractHyFeProperty{" + "key='" + key + '\'' + ", value=" + value + '}';
+    }
 }

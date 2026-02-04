@@ -6,7 +6,6 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.util.RawJsonReader;
 import com.hypixel.hytale.logger.HytaleLogger;
 import de.feli490.hytale.hyfechats.chat.Chat;
-import de.feli490.hytale.hyfechats.chat.ChatRole;
 import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
 import de.feli490.hytale.hyfechats.data.json.JsonChatFolderContainer;
 import de.feli490.hytale.hyfechats.data.json.JsonHyFePropertiesData;
@@ -25,15 +24,6 @@ public class JsonPlayerChatProperties {
                                                                       .addField(new KeyedCodec<>("PlayerId", Codec.UUID_STRING),
                                                                                 JsonPlayerChatProperties::setPlayerId,
                                                                                 JsonPlayerChatProperties::getPlayerId)
-                                                                      .addField(new KeyedCodec<>("MemberSince", Codec.LONG),
-                                                                                JsonPlayerChatProperties::setMemberSince,
-                                                                                JsonPlayerChatProperties::getMemberSince)
-                                                                      .addField(new KeyedCodec<>("Role", Codec.STRING),
-                                                                                JsonPlayerChatProperties::setRole,
-                                                                                JsonPlayerChatProperties::getRole)
-                                                                      .addField(new KeyedCodec<>("LastRead", Codec.LONG),
-                                                                                JsonPlayerChatProperties::setLastRead,
-                                                                                JsonPlayerChatProperties::getLastRead)
                                                                       .addField(new KeyedCodec<>("Properties",
                                                                                                  JsonHyFePropertiesData.ARRAY_CODEC),
                                                                                 JsonPlayerChatProperties::setProperties,
@@ -41,23 +31,14 @@ public class JsonPlayerChatProperties {
                                                                       .build();
 
     private UUID playerId;
-    private long memberSince;
-    private ChatRole role;
-
-    private long lastRead;
-
     private JsonHyFePropertiesData[] properties;
 
     private JsonPlayerChatProperties() {
-        lastRead = System.currentTimeMillis();
         properties = new JsonHyFePropertiesData[0];
     }
 
     public JsonPlayerChatProperties(PlayerChatProperties playerChatProperties) {
         this.playerId = playerChatProperties.getPlayerId();
-        this.role = playerChatProperties.getRole();
-        this.memberSince = playerChatProperties.getMemberSince();
-        this.lastRead = playerChatProperties.getLastRead();
         this.properties = playerChatProperties.getProperties()
                                               .stream()
                                               .map(JsonHyFePropertiesData::new)
@@ -72,30 +53,6 @@ public class JsonPlayerChatProperties {
         this.playerId = playerId;
     }
 
-    public String getRole() {
-        return role.name();
-    }
-
-    private void setRole(String role) {
-        this.role = ChatRole.valueOf(role);
-    }
-
-    public long getMemberSince() {
-        return memberSince;
-    }
-
-    private void setMemberSince(long memberSince) {
-        this.memberSince = memberSince;
-    }
-
-    public long getLastRead() {
-        return lastRead;
-    }
-
-    private void setLastRead(long lastRead) {
-        this.lastRead = lastRead;
-    }
-
     public JsonHyFePropertiesData[] getProperties() {
         return properties;
     }
@@ -106,7 +63,7 @@ public class JsonPlayerChatProperties {
 
     public PlayerChatProperties toPlayerChatProperties(Chat chat) {
 
-        PlayerChatProperties playerChatProperties = new PlayerChatProperties(chat, playerId, memberSince, role, lastRead);
+        PlayerChatProperties playerChatProperties = new PlayerChatProperties(chat, playerId);
         for (JsonHyFePropertiesData property : properties) {
             playerChatProperties.setProperty(property.getKey(), property.getValue());
         }

@@ -126,7 +126,8 @@ public class Chat {
     }
 
     public void addChatter(UUID playerId, ChatRole role) {
-        PlayerChatProperties playerChatProperties = new PlayerChatProperties(this, playerId, role);
+        PlayerChatProperties playerChatProperties = new PlayerChatProperties(this, playerId);
+        playerChatProperties.setRole(role);
         this.playerChatProperties.add(playerChatProperties);
         memberChangedListeners.forEach(listener -> listener.onMemberAdded(this, playerChatProperties));
     }
