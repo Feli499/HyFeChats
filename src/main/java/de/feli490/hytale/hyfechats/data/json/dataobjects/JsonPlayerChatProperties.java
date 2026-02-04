@@ -8,8 +8,8 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import de.feli490.hytale.hyfechats.chat.Chat;
 import de.feli490.hytale.hyfechats.chat.ChatRole;
 import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
-import de.feli490.hytale.hyfechats.chat.playerchatproperties.DisplayUnreadProperty;
 import de.feli490.hytale.hyfechats.data.json.JsonChatFolderContainer;
+import de.feli490.hytale.hyfechats.data.json.JsonHyFePropertiesData;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -34,9 +34,10 @@ public class JsonPlayerChatProperties {
                                                                       .addField(new KeyedCodec<>("LastRead", Codec.LONG),
                                                                                 JsonPlayerChatProperties::setLastRead,
                                                                                 JsonPlayerChatProperties::getLastRead)
-                                                                      .addField(new KeyedCodec<>("DisplayUnread", Codec.STRING),
-                                                                                JsonPlayerChatProperties::setDisplayUnreadProperty,
-                                                                                JsonPlayerChatProperties::getDisplayUnreadPropertyString)
+                                                                      .addField(new KeyedCodec<>("Properties",
+                                                                                                 JsonHyFePropertiesData.ARRAY_CODEC),
+                                                                                JsonPlayerChatProperties::setProperties,
+                                                                                JsonPlayerChatProperties::getProperties)
                                                                       .build();
 
     private UUID playerId;
@@ -44,11 +45,12 @@ public class JsonPlayerChatProperties {
     private ChatRole role;
 
     private long lastRead;
-    private DisplayUnreadProperty displayUnreadProperty;
+
+    private JsonHyFePropertiesData[] properties;
 
     private JsonPlayerChatProperties() {
         lastRead = System.currentTimeMillis();
-        displayUnreadProperty = DisplayUnreadProperty.ALWAYS;
+        properties = new JsonHyFePropertiesData[0];
     }
 
     public JsonPlayerChatProperties(PlayerChatProperties playerChatProperties) {
@@ -56,7 +58,10 @@ public class JsonPlayerChatProperties {
         this.role = playerChatProperties.getRole();
         this.memberSince = playerChatProperties.getMemberSince();
         this.lastRead = playerChatProperties.getLastRead();
-        this.displayUnreadProperty = playerChatProperties.getDisplayUnread();
+        this.properties = playerChatProperties.getProperties()
+                                              .stream()
+                                              .map(JsonHyFePropertiesData::new)
+                                              .toArray(JsonHyFePropertiesData[]::new);
     }
 
     public UUID getPlayerId() {
@@ -83,22 +88,6 @@ public class JsonPlayerChatProperties {
         this.memberSince = memberSince;
     }
 
-    public String getDisplayUnreadPropertyString() {
-        return displayUnreadProperty.name();
-    }
-
-    public DisplayUnreadProperty getDisplayUnreadProperty() {
-        return displayUnreadProperty;
-    }
-
-    private void setDisplayUnreadProperty(String displayUnreadPropertyString) {
-        this.displayUnreadProperty = DisplayUnreadProperty.valueOf(displayUnreadPropertyString);
-    }
-
-    private void setDisplayUnreadProperty(DisplayUnreadProperty displayUnreadProperty) {
-        this.displayUnreadProperty = displayUnreadProperty;
-    }
-
     public long getLastRead() {
         return lastRead;
     }
@@ -107,8 +96,21 @@ public class JsonPlayerChatProperties {
         this.lastRead = lastRead;
     }
 
+    public JsonHyFePropertiesData[] getProperties() {
+        return properties;
+    }
+
+    private void setProperties(JsonHyFePropertiesData[] properties) {
+        this.properties = properties;
+    }
+
     public PlayerChatProperties toPlayerChatProperties(Chat chat) {
-        return new PlayerChatProperties(chat, playerId, memberSince, role, lastRead, displayUnreadProperty);
+
+        PlayerChatProperties playerChatProperties = new PlayerChatProperties(chat, playerId, memberSince, role, lastRead);
+        for (JsonHyFePropertiesData property : properties) {
+            playerChatProperties.setProperty(property.getKey(), property.getValue());
+        }
+        return playerChatProperties;
     }
 
     public static Set<JsonPlayerChatProperties> loadFromChatDirectory(JsonChatFolderContainer jsonChatFolderContainer, HytaleLogger logger)

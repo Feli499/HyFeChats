@@ -218,14 +218,6 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader, Deletab
             displayUnreadProperty = DisplayUnreadProperty.ALWAYS;
         }
 
-        public JsonPlayerChatProperties(PlayerChatProperties playerChatProperties) {
-            this.playerId = playerChatProperties.getPlayerId();
-            this.role = playerChatProperties.getRole();
-            this.memberSince = playerChatProperties.getMemberSince();
-            this.lastRead = playerChatProperties.getLastRead();
-            this.displayUnreadProperty = playerChatProperties.getDisplayUnread();
-        }
-
         public UUID getPlayerId() {
             return playerId;
         }
@@ -267,7 +259,9 @@ public class SingleChatFileJsonChatDataLoader implements ChatDataLoader, Deletab
         }
 
         public PlayerChatProperties toPlayerChatProperties(Chat chat) {
-            return new PlayerChatProperties(chat, playerId, memberSince, role, lastRead, displayUnreadProperty);
+            PlayerChatProperties playerChatProperties = new PlayerChatProperties(chat, playerId, memberSince, role, lastRead);
+            playerChatProperties.setProperty(PlayerChatProperties.DISPLAY_UNREAD_PROPERTIES, displayUnreadProperty.name());
+            return playerChatProperties;
         }
     }
 

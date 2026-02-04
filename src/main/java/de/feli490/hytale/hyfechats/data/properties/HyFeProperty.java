@@ -9,4 +9,8 @@ public interface HyFeProperty<T> {
     void setValue(T value);
 
     boolean hasValue();
+
+    String getValueAsString();
+
+    void setValueFromString(String value);
 }

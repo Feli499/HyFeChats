@@ -1,13 +1,13 @@
 package de.feli490.hytale.hyfechats.data.properties;
 
-public class AbstractHyFeProperty<T> implements HyFeProperty<T> {
+public abstract class AbstractHyFeProperty<T> implements HyFeProperty<T> {
 
     private final String key;
     private T value;
 
-    protected AbstractHyFeProperty(String key, T value) {
+    protected AbstractHyFeProperty(String key, T defaultValue) {
         this.key = key;
-        this.value = value;
+        this.value = defaultValue;
     }
 
     @Override
@@ -28,5 +28,10 @@ public class AbstractHyFeProperty<T> implements HyFeProperty<T> {
     @Override
     public boolean hasValue() {
         return value != null;
+    }
+
+    @Override
+    public String getValueAsString() {
+        return value.toString();
     }
 }

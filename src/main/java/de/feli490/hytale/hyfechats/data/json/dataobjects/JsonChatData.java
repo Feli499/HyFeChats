@@ -5,6 +5,7 @@ import de.feli490.hytale.hyfechats.chat.ChatMessage;
 import de.feli490.hytale.hyfechats.chat.ChatType;
 import de.feli490.hytale.hyfechats.chat.PlayerChatProperties;
 import de.feli490.hytale.hyfechats.data.ChatData;
+import de.feli490.hytale.hyfechats.data.json.JsonHyFePropertiesData;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,11 +56,16 @@ public class JsonChatData implements ChatData {
     @Override
     public Set<PlayerChatProperties> getPlayerChatProperties(Chat chat) {
 
-        HashSet<PlayerChatProperties> playerChatProperties = new HashSet<>(jsonPlayerChatProperties.size());
+        HashSet<PlayerChatProperties> playerChatPropertySet = new HashSet<>(jsonPlayerChatProperties.size());
         for (JsonPlayerChatProperties jsonPlayerChatProperty : jsonPlayerChatProperties) {
-            playerChatProperties.add(jsonPlayerChatProperty.toPlayerChatProperties(chat));
+            PlayerChatProperties playerChatProperties = jsonPlayerChatProperty.toPlayerChatProperties(chat);
+            for (JsonHyFePropertiesData property : jsonPlayerChatProperty.getProperties()) {
+                playerChatProperties.setProperty(property.getKey(), property.getValue());
+            }
+
+            playerChatPropertySet.add(playerChatProperties);
         }
-        return playerChatProperties;
+        return playerChatPropertySet;
     }
 
     @Override

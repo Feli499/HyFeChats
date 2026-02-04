@@ -2,11 +2,12 @@ package de.feli490.hytale.hyfechats.data.properties;
 
 public class IntegerHyFeProperty extends AbstractHyFeProperty<Integer> {
 
-    public IntegerHyFeProperty(String key, Integer value) {
-        super(key, value);
+    public IntegerHyFeProperty(String key, Integer defaultValue) {
+        super(key, defaultValue);
     }
 
-    public IntegerHyFeProperty(String key) {
-        this(key, null);
+    @Override
+    public void setValueFromString(String value) {
+        setValue(Integer.parseInt(value));
     }
 }
